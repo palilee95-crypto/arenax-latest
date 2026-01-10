@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #009e60;
+  --primary-glow: rgba(0, 158, 96, 0.5);
+  --secondary: #007042;
+  --background: #0a0a0c;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.1);
+  --text: #ffffff;
+  --text-muted: #a0a0a0;
+  --border: rgba(255, 255, 255, 0.1);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(12px);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-outfit: var(--font-outfit);
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-geist-sans), sans-serif;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+
+.auth-card {
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.auth-header h2 {
+  background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-group input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 15px var(--primary-glow) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.auth-actions button {
+  background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px var(--primary-glow) !important;
+  transition: all 0.3s ease !important;
+}
+
+.auth-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--primary-glow) !important;
+  filter: brightness(1.1);
+}
