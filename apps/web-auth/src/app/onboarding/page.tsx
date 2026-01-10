@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button, Card } from "@arenax/ui";
 import { supabase } from "@arenax/database";
@@ -24,7 +24,7 @@ const MALAYSIA_DATA: Record<string, string[]> = {
     "Labuan": ["Labuan"]
 };
 
-export default function OnboardingPage() {
+function OnboardingContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const role = searchParams.get("role") || "player";
@@ -375,5 +375,13 @@ export default function OnboardingPage() {
                 </form>
             </Card>
         </main>
+    );
+}
+
+export default function OnboardingPage() {
+    return (
+        <Suspense fallback={<div className="auth-container"><Card className="auth-card">Loading...</Card></div>}>
+            <OnboardingContent />
+        </Suspense>
     );
 }
