@@ -79,7 +79,8 @@
     z-index: 1000;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(-100%);
-    overflow-y: auto; /* Ensure the whole sidebar can scroll if needed */
+    overflow-y: auto;
+    /* Ensure the whole sidebar can scroll if needed */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -168,7 +169,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 4px;
-    padding-bottom: var(--space-xl); /* Add space at bottom for scrolling */
+    padding-bottom: var(--space-xl);
+    /* Add space at bottom for scrolling */
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -267,14 +269,16 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-sm);
-    background: var(--surface);
-    border-radius: var(--radius-md);
+    padding: var(--space-sm) 0;
+    /* Remove horizontal padding to align with nav */
+    border-top: 1px solid var(--glass-border);
+    /* Add subtle divider instead of background */
+    margin-top: var(--space-md);
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     display: flex;
@@ -282,6 +286,15 @@
     justify-content: center;
     font-weight: 700;
     color: #000;
+    overflow: hidden;
+    /* CRITICAL: Keep image inside circle */
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .user-info {
