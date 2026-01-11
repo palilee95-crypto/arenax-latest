@@ -11,6 +11,34 @@ export default function LoginPage() {
   const supabaseUrl = (supabase as any).supabaseUrl;
   const isPlaceholder = !supabaseUrl || supabaseUrl.includes('placeholder');
 
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        console.log("User already logged in, redirecting...");
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        const role = profile?.role || session.user.user_metadata?.role || 'player';
+
+        const roleRedirects: Record<string, string> = {
+          'player': `${process.env.NEXT_PUBLIC_PLAYER_URL || 'http://localhost:3001'}/${session.user.id}`,
+          'venue-owner': `${process.env.NEXT_PUBLIC_VENUE_URL || 'http://localhost:3002'}/${session.user.id}`,
+          'admin': `${process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3003'}/${session.user.id}`
+        };
+
+        const redirectUrl = roleRedirects[role] || `http://localhost:3001/${session.user.id}`;
+        window.location.href = redirectUrl;
+      }
+    };
+
+    checkSession();
+  }, []);
+
   console.log("Supabase URL initialized with:", supabaseUrl);
   console.log("Direct Env URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 
