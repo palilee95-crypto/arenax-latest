@@ -1012,16 +1012,21 @@ body.sidebar-closed .arenax-topbar {
     }
 
     .notification-dropdown {
-        width: calc(100vw - 32px);
-        max-width: 340px;
-        right: -30px;
-        left: auto;
+        position: fixed;
+        top: 75px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 95%;
+        max-width: 360px;
+        right: auto;
         border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .notification-badge {
-        right: 0;
-        top: -2px;
+        right: 2px;
+        top: 2px;
         min-width: 16px;
         height: 16px;
         font-size: 0.6rem;
