@@ -1011,6 +1011,22 @@ body.sidebar-closed .arenax-topbar {
         display: none;
     }
 
+    .notification-dropdown {
+        width: calc(100vw - 32px);
+        max-width: 340px;
+        right: -30px;
+        left: auto;
+        border-radius: 16px;
+    }
+
+    .notification-badge {
+        right: 0;
+        top: -2px;
+        min-width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+
     /* Hero Section Mobile Refinement */
     .hero-section {
         flex-direction: column;
