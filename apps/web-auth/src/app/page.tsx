@@ -166,7 +166,13 @@ export default function LoginPage() {
         role === 'venue-owner' ? 'arenax_venue_id' :
           'arenax_admin_id';
 
-      document.cookie = `${cookieName}=${authData.user.id}; path=/; max-age=86400; SameSite=Lax`;
+      // Get domain for cross-subdomain cookies
+      const hostname = window.location.hostname;
+      const domain = hostname.includes('.') ? `.${hostname.split('.').slice(-2).join('.')}` : '';
+      const domainAttr = domain ? `; domain=${domain}` : '';
+
+      console.log("Setting cookie:", cookieName, "on domain:", domain || 'default');
+      document.cookie = `${cookieName}=${authData.user.id}; path=/; max-age=86400${domainAttr}; SameSite=Lax`;
 
       window.location.href = redirectUrl;
 

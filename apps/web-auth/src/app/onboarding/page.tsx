@@ -140,8 +140,13 @@ function OnboardingContent() {
                     details: { userId, role }
                 });
 
+                // Get domain for cross-subdomain cookies
+                const hostname = window.location.hostname;
+                const domain = hostname.includes('.') ? `.${hostname.split('.').slice(-2).join('.')}` : '';
+                const domainAttr = domain ? `; domain=${domain}` : '';
+
                 // Set cookie for session persistence (legacy support)
-                document.cookie = `arenax_player_id=${userId}; path=/; max-age=86400; SameSite=Lax`;
+                document.cookie = `arenax_player_id=${userId}; path=/; max-age=86400${domainAttr}; SameSite=Lax`;
 
                 // Check if email confirmation is required
                 if (authData.user && !authData.session) {
@@ -201,9 +206,14 @@ function OnboardingContent() {
                     details: { userId, role }
                 });
 
+                // Get domain for cross-subdomain cookies
+                const hostname = window.location.hostname;
+                const domain = hostname.includes('.') ? `.${hostname.split('.').slice(-2).join('.')}` : '';
+                const domainAttr = domain ? `; domain=${domain}` : '';
+
                 // Set cookie for session persistence
                 const cookieName = 'arenax_venue_id';
-                document.cookie = `${cookieName}=${userId}; path=/; max-age=86400; SameSite=Lax`;
+                document.cookie = `${cookieName}=${userId}; path=/; max-age=86400${domainAttr}; SameSite=Lax`;
 
                 if (authData.user && !authData.session) {
                     alert("Registration successful! Please check your email to verify your account.");
