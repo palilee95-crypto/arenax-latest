@@ -30,7 +30,9 @@ export default async function UserLayout({
         .single();
 
     if (!profile) {
-        redirect(`${process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'}`);
+        console.log("[WEB-ADMIN] ❌ No profile found, redirecting to onboarding");
+        const authUrl = process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000';
+        redirect(`${authUrl}/onboarding`);
     }
 
     // Redirection guard

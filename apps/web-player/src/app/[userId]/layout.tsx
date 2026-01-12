@@ -36,8 +36,9 @@ export default async function UserLayout({
         });
 
         if (!profile) {
-            console.log("[WEB-PLAYER] ❌ No profile found, redirecting to login");
-            redirect(`${process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'}`);
+            console.log("[WEB-PLAYER] ❌ No profile found, redirecting to onboarding");
+            const authUrl = process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000';
+            redirect(`${authUrl}/onboarding`);
         }
 
         console.log("[WEB-PLAYER] ✅ Profile found for:", profile.first_name, profile.last_name);

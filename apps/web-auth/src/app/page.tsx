@@ -31,7 +31,19 @@ export default function LoginPage() {
           .eq('id', session.user.id)
           .single();
 
-        const role = profile?.role || session.user.user_metadata?.role || 'player';
+        if (!profile) {
+          console.log("Profile missing for logged in user, redirecting to onboarding");
+          const params = new URLSearchParams({
+            role: session.user.user_metadata?.role || 'player',
+            firstName: session.user.user_metadata?.first_name || '',
+            lastName: session.user.user_metadata?.last_name || '',
+            email: session.user.user_metadata?.email || '',
+          });
+          window.location.href = `/onboarding?${params.toString()}`;
+          return;
+        }
+
+        const role = profile.role;
 
         const roleRedirects: Record<string, string> = {
           'player': `${process.env.NEXT_PUBLIC_PLAYER_URL || 'http://localhost:3001'}/${session.user.id}`,
@@ -129,18 +141,29 @@ export default function LoginPage() {
         .eq('id', authData.user.id)
         .single();
 
-      if (profileError) {
-        console.error("Profile fetch error:", profileError);
-        // Log profile error
+      if (profileError || !profile) {
+        console.error("Profile not found, redirecting to onboarding");
+        // Log profile missing
         await supabase.from('system_logs').insert({
-          level: 'error',
-          message: `Profile fetch failed for ${email} after login`,
+          level: 'warning',
+          message: `Profile missing for ${email} after login, redirecting to onboarding`,
           source: 'AuthService',
-          details: { error: profileError.message, userId: authData.user.id }
+          details: { userId: authData.user.id }
         });
+
+        const params = new URLSearchParams({
+          role: authData.user.user_metadata?.role || 'player',
+          firstName: authData.user.user_metadata?.first_name || '',
+          lastName: authData.user.user_metadata?.last_name || '',
+          email: email,
+          // We don't have the password here, but onboarding might need it if it re-triggers signUp
+          // However, if they are already logged in, onboarding should just update the profile.
+        });
+        window.location.href = `/onboarding?${params.toString()}`;
+        return;
       }
 
-      const role = profile?.role || authData.user.user_metadata?.role || 'player';
+      const role = profile.role;
 
       console.log("Login successful, redirecting to:", role);
 
