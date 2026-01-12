@@ -13,7 +13,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "@arenax/ui": "workspace:*",
-    "@arenax/database": "workspace:*"
+    "@arenax/database": "workspace:*",
+    "@supabase/supabase-js": "^2"
   },
   "devDependencies": {
     "@types/node": "^20",

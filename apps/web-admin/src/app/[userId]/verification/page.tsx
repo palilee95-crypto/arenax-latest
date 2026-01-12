@@ -183,20 +183,37 @@ export default function VerificationPage() {
     };
 
     const handleDelete = async (userId: string) => {
-        if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+        console.log("[VerificationPage] handleDelete triggered for userId:", userId);
+
+        if (!confirm("Are you sure you want to delete this user? This action cannot be undone and will remove all associated data.")) {
+            console.log("[VerificationPage] Deletion cancelled by user");
+            return;
+        }
 
         try {
-            const { error } = await supabase
-                .from('profiles')
-                .delete()
-                .eq('id', userId);
+            console.log("[VerificationPage] Calling /api/delete-user...");
+            const response = await fetch('/api/delete-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            });
 
-            if (error) throw error;
+            console.log("[VerificationPage] Response status:", response.status);
+            const result = await response.json();
+            console.log("[VerificationPage] Response result:", result);
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to delete user');
+            }
+
+            alert("User deleted successfully.");
             setIsModalOpen(false);
             fetchUsers();
-        } catch (error) {
-            console.error("Error deleting user:", error);
-            alert("Failed to delete user.");
+        } catch (error: any) {
+            console.error("[VerificationPage] Error deleting user:", error);
+            alert(`Failed to delete user: ${error.message}`);
         }
     };
 
@@ -268,7 +285,27 @@ export default function VerificationPage() {
                                                 ) : (
                                                     <span className="verified-text">✓ Verified</span>
                                                 )}
-                                                <Button variant="secondary" onClick={() => handleDetails(user)}>Details</Button>
+                                                <Button variant="secondary" onClick={() => {
+                                                    console.log("[VerificationPage] Details clicked for user:", user.id);
+                                                    handleDetails(user);
+                                                }}>Details</Button>
+                                                <button
+                                                    onClick={() => {
+                                                        console.log("[VerificationPage] Direct Delete clicked for user:", user.id);
+                                                        handleDelete(user.id);
+                                                    }}
+                                                    style={{
+                                                        background: 'rgba(255, 77, 77, 0.1)',
+                                                        color: '#ff4d4d',
+                                                        border: '1px solid rgba(255, 77, 77, 0.2)',
+                                                        padding: '0.5rem 1rem',
+                                                        borderRadius: '8px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.85rem'
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
