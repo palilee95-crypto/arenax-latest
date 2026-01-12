@@ -32,26 +32,37 @@ export async function POST(request: Request) {
             }
         });
 
-        // 1. Delete from profiles table first (to handle any constraints manually if needed)
-        // Although with ON DELETE CASCADE on other tables, this should be smooth.
+        console.log("[API delete-user] Attempting to delete user from Auth:", userId);
+
+        // 1. Delete from Supabase Auth first
+        const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+
+        if (authError) {
+            if (authError.message.includes('User not found')) {
+                console.warn('[API delete-user] User not found in Auth, proceeding to delete profile anyway');
+            } else {
+                console.error('[API delete-user] Error deleting auth user:', authError);
+                return NextResponse.json({ error: `Failed to delete auth user: ${authError.message}` }, { status: 500 });
+            }
+        } else {
+            console.log("[API delete-user] Successfully deleted user from Auth");
+        }
+
+        // 2. Delete from profiles table
+        // This is necessary if there's no ON DELETE CASCADE from auth.users to profiles,
+        // or if the user was already missing from Auth.
+        console.log("[API delete-user] Attempting to delete user from profiles:", userId);
         const { error: profileError } = await supabaseAdmin
             .from('profiles')
             .delete()
             .eq('id', userId);
 
         if (profileError) {
-            console.error('Error deleting profile:', profileError);
+            console.error('[API delete-user] Error deleting profile:', profileError);
             return NextResponse.json({ error: `Failed to delete profile: ${profileError.message}` }, { status: 500 });
         }
 
-        // 2. Delete from Supabase Auth
-        const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
-
-        if (authError) {
-            console.error('Error deleting auth user:', authError);
-            return NextResponse.json({ error: `Failed to delete auth user: ${authError.message}` }, { status: 500 });
-        }
-
+        console.log("[API delete-user] Successfully deleted user from profiles");
         return NextResponse.json({ success: true, message: 'User deleted successfully' });
     } catch (error: any) {
         console.error('Unexpected error in delete-user API:', error);
