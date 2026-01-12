@@ -78,7 +78,7 @@ export default function LogsPage() {
                         <option value="error">Error</option>
                         <option value="success">Success</option>
                     </select>
-                    <Button variant="outline" onClick={fetchLogs} disabled={loading}>
+                    <Button variant="secondary" onClick={fetchLogs} disabled={loading}>
                         Refresh
                     </Button>
                 </div>
@@ -90,7 +90,7 @@ export default function LogsPage() {
                 ) : error ? (
                     <div className="error-state" style={{ color: '#ff4d4d', padding: '2rem', textAlign: 'center' }}>
                         <p>Error fetching logs: {error}</p>
-                        <Button variant="outline" onClick={fetchLogs} style={{ marginTop: '1rem' }}>Try Again</Button>
+                        <Button variant="secondary" onClick={fetchLogs} style={{ marginTop: '1rem' }}>Try Again</Button>
                     </div>
                 ) : filteredLogs.length === 0 ? (
                     <div className="empty-state">

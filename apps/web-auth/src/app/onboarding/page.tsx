@@ -85,6 +85,13 @@ function OnboardingContent() {
 
             if (authError) {
                 console.error("SignUp Error:", authError);
+                // Log signup error
+                await supabase.from('system_logs').insert({
+                    level: 'error',
+                    message: `Signup failed for ${email}`,
+                    source: 'AuthService',
+                    details: { error: authError.message, email, role }
+                });
                 throw authError;
             }
 
@@ -93,18 +100,15 @@ function OnboardingContent() {
             const userId = authData.user.id;
 
             // 2. Insert into profiles table
-            // Note: If you have a trigger on auth.users, this might be redundant or cause a duplicate key error.
-            // For now, we assume manual insertion is needed or handled gracefully.
             if (role === "player") {
                 const { error: insertError } = await supabase
                     .from('profiles')
-                    .upsert([ // Use upsert to handle potential trigger conflicts
+                    .upsert([
                         {
                             id: userId,
                             first_name: firstName?.trim(),
                             last_name: lastName?.trim(),
                             email: email?.trim(),
-                            // password: password?.trim(), // DO NOT STORE PASSWORD IN PLAIN TEXT
                             role: role,
                             nationality: nationality?.trim(),
                             state: state?.trim() || null,
@@ -115,10 +119,26 @@ function OnboardingContent() {
                             position: position,
                             skill_level: skillLevel,
                         }
-                    ])
-                    .select();
+                    ]);
 
-                if (insertError) throw insertError;
+                if (insertError) {
+                    // Log profile insert error
+                    await supabase.from('system_logs').insert({
+                        level: 'error',
+                        message: `Profile creation failed for ${email}`,
+                        source: 'AuthService',
+                        details: { error: insertError.message, userId, role }
+                    });
+                    throw insertError;
+                }
+
+                // Log success
+                await supabase.from('system_logs').insert({
+                    level: 'info',
+                    message: `New user signed up: ${email}`,
+                    source: 'AuthService',
+                    details: { userId, role }
+                });
 
                 // Set cookie for session persistence (legacy support)
                 document.cookie = `arenax_player_id=${userId}; path=/; max-age=86400; SameSite=Lax`;
@@ -140,13 +160,11 @@ function OnboardingContent() {
                         first_name: firstName?.trim(),
                         last_name: lastName?.trim(),
                         email: email?.trim(),
-                        // password: password?.trim(),
                         role: role,
                         nationality: nationality?.trim(),
                         state: state?.trim() || null,
                         district: district?.trim() || null,
-                    }])
-                    .select();
+                    }]);
 
                 if (profileError) throw profileError;
 
@@ -162,10 +180,26 @@ function OnboardingContent() {
                             total_courts: parseInt(venueCourts),
                             facilities: Array.from((e.target as any).querySelectorAll('input[type="checkbox"]:checked')).map((cb: any) => cb.parentElement.textContent.trim())
                         }
-                    ])
-                    .select();
+                    ]);
 
-                if (venueError) throw venueError;
+                if (venueError) {
+                    // Log venue insert error
+                    await supabase.from('system_logs').insert({
+                        level: 'error',
+                        message: `Venue creation failed for ${email}`,
+                        source: 'AuthService',
+                        details: { error: venueError.message, userId }
+                    });
+                    throw venueError;
+                }
+
+                // Log success
+                await supabase.from('system_logs').insert({
+                    level: 'info',
+                    message: `New venue owner signed up: ${email}`,
+                    source: 'AuthService',
+                    details: { userId, role }
+                });
 
                 // Set cookie for session persistence
                 const cookieName = 'arenax_venue_id';
@@ -182,6 +216,14 @@ function OnboardingContent() {
         } catch (err: any) {
             console.error("Error saving profile:", err);
             setError(err.message || "An error occurred while saving your profile. Please try again.");
+
+            // Log unexpected error
+            await supabase.from('system_logs').insert({
+                level: 'error',
+                message: `Unexpected error during onboarding for ${email}`,
+                source: 'AuthService',
+                details: { error: err.message, email }
+            });
         } finally {
             setLoading(false);
         }

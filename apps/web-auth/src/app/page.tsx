@@ -50,11 +50,53 @@ export default function LoginPage() {
   console.log("Supabase URL initialized with:", supabaseUrl);
   console.log("Direct Env URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState<string | null>(null);
+
+  const handleResendEmail = async (email: string) => {
+    setResending(true);
+    setResendMessage(null);
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+
+      if (resendError) throw resendError;
+      setResendMessage("Verification email resent! Please check your inbox.");
+
+      // Log success
+      await supabase.from('system_logs').insert({
+        level: 'info',
+        message: `Verification email resent to ${email}`,
+        source: 'AuthService',
+        details: { email }
+      });
+    } catch (err: any) {
+      console.error("Resend error:", err);
+      setResendMessage(`Error: ${err.message}`);
+
+      // Log error
+      await supabase.from('system_logs').insert({
+        level: 'error',
+        message: `Failed to resend verification email to ${email}`,
+        source: 'AuthService',
+        details: { error: err.message, email }
+      });
+    } finally {
+      setResending(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login attempt started...");
     setLoading(true);
     setError(null);
+    setResendMessage(null);
 
     const formData = new FormData(e.target as HTMLFormElement);
     const email = (formData.get("email") as string)?.trim();
@@ -67,7 +109,16 @@ export default function LoginPage() {
         password
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        // Log auth error
+        await supabase.from('system_logs').insert({
+          level: 'warning',
+          message: `Login failed for ${email}`,
+          source: 'AuthService',
+          details: { error: authError.message, email }
+        });
+        throw authError;
+      }
 
       if (!authData.user) throw new Error("Login failed");
 
@@ -80,13 +131,26 @@ export default function LoginPage() {
 
       if (profileError) {
         console.error("Profile fetch error:", profileError);
-        // Fallback to metadata if profile fetch fails (optional)
-        // throw new Error("Profile not found");
+        // Log profile error
+        await supabase.from('system_logs').insert({
+          level: 'error',
+          message: `Profile fetch failed for ${email} after login`,
+          source: 'AuthService',
+          details: { error: profileError.message, userId: authData.user.id }
+        });
       }
 
       const role = profile?.role || authData.user.user_metadata?.role || 'player';
 
       console.log("Login successful, redirecting to:", role);
+
+      // Log success
+      await supabase.from('system_logs').insert({
+        level: 'info',
+        message: `User logged in: ${email}`,
+        source: 'AuthService',
+        details: { role, userId: authData.user.id }
+      });
 
       // Redirect based on role
       const roleRedirects: Record<string, string> = {
@@ -96,24 +160,37 @@ export default function LoginPage() {
       };
 
       const redirectUrl = roleRedirects[role] || `http://localhost:3001/${authData.user.id}`;
-      console.log("Redirect URL:", redirectUrl);
 
-      // Set cookie for session persistence across ports
+      // Set cookie for session persistence
       const cookieName = role === 'player' ? 'arenax_player_id' :
         role === 'venue-owner' ? 'arenax_venue_id' :
           'arenax_admin_id';
 
-      console.log("Setting cookie:", cookieName);
-      // Omit domain=localhost as it can cause issues on some browsers
       document.cookie = `${cookieName}=${authData.user.id}; path=/; max-age=86400; SameSite=Lax`;
-
-      // Also set the Supabase session cookie if needed by middleware (handled by Supabase client usually, but good to be explicit if we have custom middleware)
 
       window.location.href = redirectUrl;
 
     } catch (err: any) {
       console.error("Login error details:", err);
       setError(err.message || "An error occurred during login");
+
+      // Check if it's an unconfirmed email error
+      if (err.message?.toLowerCase().includes("email not confirmed")) {
+        setError(
+          <div style={{ textAlign: 'center' }}>
+            <p>Your email is not verified yet.</p>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => handleResendEmail(email)}
+              disabled={resending}
+              style={{ marginTop: '0.5rem' }}
+            >
+              {resending ? "Resending..." : "Resend Verification Email"}
+            </Button>
+          </div> as any
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -145,6 +222,7 @@ export default function LoginPage() {
             </div>
           )}
           {error && <div className="error-message" style={{ color: '#ff4d4d', marginBottom: '1.5rem', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem', background: 'rgba(255,77,77,0.1)', borderRadius: '8px', border: '1px solid rgba(255,77,77,0.2)' }}>{error}</div>}
+          {resendMessage && <div className="success-message" style={{ color: '#00ff88', marginBottom: '1.5rem', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem', background: 'rgba(0,255,136,0.1)', borderRadius: '8px', border: '1px solid rgba(0,255,136,0.2)' }}>{resendMessage}</div>}
 
           <div className="form-group">
             <label htmlFor="email" style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>Email Address</label>
