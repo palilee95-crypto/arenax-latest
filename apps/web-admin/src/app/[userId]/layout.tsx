@@ -2,6 +2,7 @@ import { TopBar } from "@arenax/ui";
 import { SidebarWrapper } from "../../components/SidebarWrapper";
 import { supabase } from "@arenax/database";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function UserLayout({
     children,
@@ -11,6 +12,12 @@ export default async function UserLayout({
     params: Promise<{ userId: string }>;
 }) {
     const { userId } = await params;
+    const cookieStore = await cookies();
+    const allCookies = cookieStore.getAll().map((c: { name: string, value: string }) => `${c.name}=${c.value.substring(0, 5)}...`).join(', ');
+
+    console.log("[WEB-ADMIN] ===== LAYOUT START =====");
+    console.log("[WEB-ADMIN] Received userId:", userId);
+    console.log("[WEB-ADMIN] Cookies seen by server:", allCookies);
 
     if (!userId) {
         redirect(`${process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'}`);

@@ -2,6 +2,7 @@ import { TopBar } from "@arenax/ui";
 import { SidebarWrapper } from "../../components/SidebarWrapper";
 import { supabase } from "@arenax/database";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { CreateMatchProvider } from "../../contexts/CreateMatchContext";
 
 export default async function UserLayout({
@@ -12,8 +13,12 @@ export default async function UserLayout({
     params: Promise<{ userId: string }>;
 }) {
     const { userId } = await params;
+    const cookieStore = await cookies();
+    const allCookies = cookieStore.getAll().map((c: { name: string, value: string }) => `${c.name}=${c.value.substring(0, 5)}...`).join(', ');
+
     console.log("[WEB-PLAYER] ===== LAYOUT START =====");
     console.log("[WEB-PLAYER] Received userId:", userId);
+    console.log("[WEB-PLAYER] Cookies seen by server:", allCookies);
     console.log("[WEB-PLAYER] Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 40));
 
     try {
