@@ -25,19 +25,33 @@ if (isBrowser) {
     console.log('[database] Protocol:', window.location.protocol);
 }
 
+// Custom storage for cross-subdomain auth
+const cookieStorage = {
+    getItem: (key: string) => {
+        if (!isBrowser) return null;
+        const cookie = document.cookie.split('; ').find((row) => row.startsWith(`${key}=`));
+        if (!cookie) return null;
+        return decodeURIComponent(cookie.split('=')[1]);
+    },
+    setItem: (key: string, value: string) => {
+        if (!isBrowser) return;
+        const domainAttr = domain ? `; domain=${domain}` : '';
+        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=31536000${domainAttr}; SameSite=Lax; Secure`;
+    },
+    removeItem: (key: string) => {
+        if (!isBrowser) return;
+        const domainAttr = domain ? `; domain=${domain}` : '';
+        document.cookie = `${key}=; path=/; max-age=0${domainAttr}; SameSite=Lax; Secure`;
+    }
+};
+
 export const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
         storageKey: 'arenax-auth-token',
-        // @ts-ignore
-        cookieOptions: {
-            domain: domain,
-            path: '/',
-            sameSite: 'lax',
-            secure: isBrowser ? window.location.protocol === 'https:' : true,
-        }
+        storage: cookieStorage
     }
 });
 
