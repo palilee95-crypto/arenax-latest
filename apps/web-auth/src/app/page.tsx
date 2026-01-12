@@ -16,8 +16,9 @@ export default function LoginPage() {
     const checkSession = async () => {
       // Don't auto-redirect if we just logged out
       const params = new URLSearchParams(window.location.search);
-      if (params.get('loggedout') === 'true') {
+      if (params.get('loggedout') === 'true' || sessionStorage.getItem('justLoggedOut') === 'true') {
         console.log("User just logged out, skipping auto-redirect");
+        sessionStorage.setItem('justLoggedOut', 'true');
         return;
       }
 
