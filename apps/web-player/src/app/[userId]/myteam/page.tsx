@@ -156,6 +156,10 @@ export default function MyTeamPage() {
     const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Image size too large. Please upload an image smaller than 2MB.");
+                return;
+            }
             const reader = new FileReader();
             reader.onloadend = () => {
                 setLogoUrl(reader.result as string);
@@ -167,6 +171,10 @@ export default function MyTeamPage() {
     const handleEditLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Image size too large. Please upload an image smaller than 2MB.");
+                return;
+            }
             const reader = new FileReader();
             reader.onloadend = () => {
                 setEditLogo(reader.result as string);
@@ -198,6 +206,7 @@ export default function MyTeamPage() {
             }
         } catch (error: any) {
             console.error("Error updating team:", error);
+            alert("Error updating team: " + error.message);
         } finally {
             setUpdating(false);
         }
