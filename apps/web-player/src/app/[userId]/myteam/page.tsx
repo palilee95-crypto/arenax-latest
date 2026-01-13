@@ -925,6 +925,12 @@ export default function MyTeamPage() {
                     color: #fff;
                 }
 
+                .logo-preview-wrapper {
+                    position: relative;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+
                 .logo-preview-wrapper:hover .logo-edit-overlay {
                     opacity: 1;
                 }
