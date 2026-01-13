@@ -923,6 +923,7 @@ export default function MyTeamPage() {
                     cursor: pointer;
                     border-radius: 32px;
                     color: #fff;
+                    z-index: 10;
                 }
 
                 .logo-preview-wrapper {
