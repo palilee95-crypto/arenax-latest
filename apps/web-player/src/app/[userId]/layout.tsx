@@ -2,7 +2,6 @@ import { TopBar } from "@arenax/ui";
 import { SidebarWrapper } from "../../components/SidebarWrapper";
 import { supabase } from "@arenax/database";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { CreateMatchProvider } from "../../contexts/CreateMatchContext";
 import { unstable_noStore as noStore } from 'next/cache';
 import { NotificationHandler } from "../../components/NotificationHandler";
