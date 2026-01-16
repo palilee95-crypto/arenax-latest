@@ -229,13 +229,7 @@ export default function SettingsPage() {
                                             📁 Upload Image
                                         </Button>
                                     </div>
-                                    <input
-                                        type="hidden"
-                                        placeholder="Or paste image URL..."
-                                        value={profile.avatar_url || ""}
-                                        onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                                        style={{ display: 'none' }}
-                                    />
+
                                 </div>
                             </div>
                             <div className="image-group">
@@ -278,13 +272,7 @@ export default function SettingsPage() {
                                             📁 Upload Image
                                         </Button>
                                     </div>
-                                    <input
-                                        type="hidden"
-                                        placeholder="Or paste image URL..."
-                                        value={profile.hero_url || ""}
-                                        onChange={(e) => setProfile({ ...profile, hero_url: e.target.value })}
-                                        style={{ display: 'none' }}
-                                    />
+
                                 </div>
                             </div>
                         </div>
