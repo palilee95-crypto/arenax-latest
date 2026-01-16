@@ -31,7 +31,7 @@ export default function SlotsPage() {
         const fetchVenue = async () => {
             setLoading(true);
             try {
-                const { data, error } = await supabase
+                const { data } = await supabase
                     .from('venues')
                     .select('id, opening_time, closing_time')
                     .eq('owner_id', userId)
