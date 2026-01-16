@@ -141,6 +141,14 @@ export default function FindSquadPage() {
 
             if (error) throw error;
             setFriendStatuses(prev => ({ ...prev, [friendId]: 'requested' }));
+
+            // Send push notification
+            fetch('/api/notifications/friend-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ senderId: userId, receiverId: friendId })
+            }).catch(err => console.error("Error sending friend request notification:", err));
+
         } catch (error: any) {
             alert("Error adding friend: " + error.message);
         } finally {

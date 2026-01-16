@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { CreateMatchProvider } from "../../contexts/CreateMatchContext";
 import { unstable_noStore as noStore } from 'next/cache';
+import { NotificationHandler } from "../../components/NotificationHandler";
 
 export const dynamic = 'force-dynamic';
 
@@ -79,6 +80,7 @@ export default async function UserLayout({
 
         return (
             <CreateMatchProvider>
+                <NotificationHandler userId={userId} />
                 <div className="app-layout">
                     <SidebarWrapper
                         userId={userId}
