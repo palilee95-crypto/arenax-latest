@@ -25,7 +25,7 @@ interface SidebarProps {
     onClose?: () => void;
 }
 
-export const Sidebar = ({ sections, userName, userRole, avatarUrl, isOpen, onClose }: SidebarProps) => {
+export const Sidebar = ({ sections, avatarUrl, isOpen, onClose }: SidebarProps) => {
     return (
         <>
             {/* Mobile Overlay */}
