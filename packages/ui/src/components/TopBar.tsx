@@ -59,7 +59,7 @@ export const TopBar = ({ userId, userName, userRole, avatarUrl, statusBadge, onM
         if (!userId || !supabase) return;
 
         const fetchNotifications = async () => {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('notifications')
                 .select('*')
                 .eq('user_id', userId)
