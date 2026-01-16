@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button } from "@arenax/ui";
 import { supabase } from "@arenax/database";
 import { useParams } from "next/navigation";
