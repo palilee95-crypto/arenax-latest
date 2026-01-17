@@ -199,14 +199,14 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
       </section>
 
       <div className="dashboard-grid">
-        <Card title="Quick Actions" variant="glass">
+        <Card title="Quick Actions" variant="glass" className="hide-on-mobile">
           <div className="actions-grid">
             <Button variant="primary">Find Match</Button>
             <Button variant="secondary">Book Venue</Button>
           </div>
         </Card>
 
-        <Card title="My Wallet" variant="glass">
+        <Card title="My Wallet" variant="glass" className="hide-on-mobile">
           <div className="wallet-info">
             <div className="balance-label">Current Balance</div>
             <div className="balance-amount">RM {walletBalance.toFixed(2)}</div>
@@ -221,7 +221,7 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
           </div>
         </Card>
 
-        <Card title="Upcoming Matches" variant="glass" className="span-2">
+        <Card title="Upcoming Matches" variant="glass" className="span-2 hide-on-mobile">
           <div className="empty-state">
             <p>No upcoming matches. Start searching now!</p>
             <Button variant="primary" style={{ marginTop: '1rem' }}>Find Match</Button>
