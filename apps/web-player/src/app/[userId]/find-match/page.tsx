@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, Button } from "@arenax/ui";
-import { supabase, Match } from "@arenax/database";
+import { supabase } from "@arenax/database";
 import { useRouter, useParams } from "next/navigation";
 import { useCreateMatch } from "../../../contexts/CreateMatchContext";
 
