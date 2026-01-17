@@ -18,23 +18,38 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
   const [topUpLoading, setTopUpLoading] = useState(false);
 
   useEffect(() => {
-    const fetchPlayerData = async () => {
-      try {
-        if (userId) {
-          // 1. Fetch Profile (Refetch to ensure freshness)
-          const { data: profileData, error: profileError } = await supabase
+    // Real-time updates subscription only
+    // We already have initialProfile from server-side props, no need to refetch
+    const channel = supabase
+      .channel('player-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
+        async () => {
+          console.log("[Dashboard] Realtime update received!");
+          // Refetch profile when database changes
+          const { data: profileData } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', userId)
             .single();
 
-          if (profileError) {
-            console.error("[Dashboard] Profile fetch error:", profileError);
-          } else {
+          if (profileData) {
             setProfile(profileData);
           }
+        }
+      )
+      .subscribe();
 
-          // 2. Fetch Wallet Balance
+    // Also subscribe to wallet changes
+    const walletChannel = supabase
+      .channel('wallet-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'wallets', filter: `user_id=eq.${userId}` },
+        async () => {
+          console.log("[Dashboard] Wallet Realtime update received!");
+          // Refetch wallet balance when database changes
           const { data: walletData } = await supabase
             .from('wallets')
             .select('balance')
@@ -45,29 +60,11 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
             setWalletBalance(Number(walletData.balance));
           }
         }
-      } catch (error) {
-        console.error("Error fetching player data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Only fetch if we somehow didn't get initial data, OR to subscribe to updates
-    // Actually, we can just set up the subscription.
-    // fetchPlayerData(); // Let's avoid double-fetching immediately if we have data.
-
-    // Real-time updates
-    const channel = supabase
-      .channel('player-db-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
-        () => {
-          console.log("[Dashboard] Realtime update received!");
-          fetchPlayerData();
-        }
       )
       .subscribe();
+
+    // Since initialProfile is provided, we can set loading to false immediately
+    setLoading(false);
 
     return () => {
       supabase.removeChannel(channel);
