@@ -68,6 +68,7 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
 
     return () => {
       supabase.removeChannel(channel);
+      supabase.removeChannel(walletChannel);
     };
   }, [userId]);
 
