@@ -1,6 +1,6 @@
 import { TopBar } from "@arenax/ui";
 import { SidebarWrapper } from "../../components/SidebarWrapper";
-import { supabase } from "@arenax/database";
+import { supabase, getProfileImageUrl } from "@arenax/database";
 import { redirect } from "next/navigation";
 import { CreateMatchProvider } from "../../contexts/CreateMatchContext";
 import { unstable_noStore as noStore } from 'next/cache';
@@ -72,14 +72,14 @@ export default async function UserLayout({
                         userId={userId}
                         userName={userName}
                         userRole={userRole}
-                        avatarUrl={profile.avatar_url}
+                        avatarUrl={getProfileImageUrl(profile.avatar_url, "")}
                     />
                     <div className="main-wrapper">
                         <TopBar
                             userId={userId}
                             userName={userName}
                             userRole={userRole}
-                            avatarUrl={profile.avatar_url}
+                            avatarUrl={getProfileImageUrl(profile.avatar_url, "")}
                             statusBadge="PLAYER: ACTIVE"
                             profileHref={`/${userId}`}
                             settingsHref={`/${userId}/settings`}
