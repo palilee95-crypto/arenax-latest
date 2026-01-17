@@ -337,7 +337,7 @@
     top: 0;
     right: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 2000;
     gap: var(--space-md);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -349,9 +349,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(10, 10, 12, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: #000000;
+    /* Force solid black for mobile */
     border-bottom: 1px solid var(--glass-border);
     z-index: -1;
 }
