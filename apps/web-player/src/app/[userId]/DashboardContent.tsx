@@ -187,10 +187,15 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
             // Keep skeleton for when loading is strictly true (e.g. initial profile was null)
             <div className="skeleton-loader" style={{ width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)' }} />
           ) : (
-            // Only display image if hero_url exists and is a valid base64 string
-            profile?.hero_url && profile.hero_url.startsWith('data:image/') ? (
+            // Display image if hero_url exists
+            // Handle both data URL format (data:image/...) and raw base64
+            profile?.hero_url ? (
               <img
-                src={profile.hero_url}
+                src={
+                  profile.hero_url.startsWith('data:image/')
+                    ? profile.hero_url
+                    : `data:image/jpeg;base64,${profile.hero_url}`
+                }
                 alt="Football Player"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
