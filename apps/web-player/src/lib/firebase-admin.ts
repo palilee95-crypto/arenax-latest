@@ -6,7 +6,13 @@ const serviceAccount = {
     privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
 };
 
-if (!admin.apps.length) {
+const hasFirebaseKeys = !!(
+    process.env.FIREBASE_PROJECT_ID &&
+    process.env.FIREBASE_CLIENT_EMAIL &&
+    process.env.FIREBASE_PRIVATE_KEY
+);
+
+if (!admin.apps.length && hasFirebaseKeys) {
     try {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -15,6 +21,8 @@ if (!admin.apps.length) {
     } catch (error) {
         console.error('[firebase-admin] Initialization error:', error);
     }
+} else if (!hasFirebaseKeys) {
+    console.warn('[firebase-admin] Skipping initialization: Missing Firebase credentials (expected during build)');
 }
 
 export const messaging = admin.messaging();

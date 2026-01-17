@@ -1,6 +1,12 @@
 import * as admin from 'firebase-admin';
 
-if (!admin.apps.length) {
+const hasFirebaseKeys = !!(
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
+    process.env.FIREBASE_CLIENT_EMAIL &&
+    process.env.FIREBASE_PRIVATE_KEY
+);
+
+if (!admin.apps.length && hasFirebaseKeys) {
     try {
         admin.initializeApp({
             credential: admin.credential.cert({
@@ -13,6 +19,8 @@ if (!admin.apps.length) {
     } catch (error) {
         console.error('Firebase Admin initialization error', error);
     }
+} else if (!hasFirebaseKeys) {
+    console.warn('Firebase Admin skipping initialization: Missing Firebase credentials (expected during build)');
 }
 
 export const adminDb = admin.messaging();
