@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 interface SidebarItem {
     label: string;
@@ -56,11 +57,11 @@ export const Sidebar = ({ sections, isOpen, onClose }: SidebarProps) => {
                             {section.title && <h3 className="section-title">{section.title}</h3>}
                             <div className="section-items">
                                 {section.items.map((item, iIndex) => (
-                                    <a
+                                    <Link
                                         key={iIndex}
                                         href={item.href}
                                         className={`nav-item ${item.active ? 'active' : ''} ${item.avatarUrl ? 'has-avatar' : ''}`}
-                                        onClick={(e) => {
+                                        onClick={(e: React.MouseEvent) => {
                                             if (item.onClick) {
                                                 e.preventDefault();
                                                 item.onClick();
@@ -80,7 +81,7 @@ export const Sidebar = ({ sections, isOpen, onClose }: SidebarProps) => {
                                             item.icon && <span className="nav-icon">{item.icon}</span>
                                         )}
                                         <span className="nav-label">{item.label}</span>
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>

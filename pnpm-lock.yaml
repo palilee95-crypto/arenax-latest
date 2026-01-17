@@ -205,6 +205,9 @@ importers:
       '@arenax/database':
         specifier: workspace:*
         version: link:../database
+      next:
+        specifier: 15.1.11
+        version: 15.1.11(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: 19.2.3
         version: 19.2.3
