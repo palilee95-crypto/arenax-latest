@@ -23,5 +23,21 @@ if (!admin.apps.length && hasFirebaseKeys) {
     console.warn('Firebase Admin skipping initialization: Missing Firebase credentials (expected during build)');
 }
 
-export const adminDb = admin.messaging();
+// Lazy adminDb export to prevent build-time crashes
+export const adminDb = new Proxy({} as admin.messaging.Messaging, {
+    get(target, prop) {
+        if (!hasFirebaseKeys) {
+            return () => {
+                console.warn(`[firebase-admin] adminDb.${String(prop)} called but Firebase keys are missing.`);
+                return Promise.resolve({ success: false, error: 'Missing keys' });
+            };
+        }
+        const service = admin.messaging();
+        const value = (service as any)[prop];
+        if (typeof value === 'function') {
+            return value.bind(service);
+        }
+        return value;
+    }
+});
 export default admin;
