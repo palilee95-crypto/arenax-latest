@@ -60,8 +60,14 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 });
 
 
+
 export const getProfileImageUrl = (url: string | undefined, fallback: string) => {
-    if (!url) return fallback;
+    // Known broken defaults in DB
+    const BROKEN_URLS = [
+        'https://images.unsplash.com/photo-1579952363873-27f3bde9beec?auto=format&fit=crop&q=80&w=1000'
+    ];
+
+    if (!url || BROKEN_URLS.includes(url)) return fallback;
     if (url.startsWith('data:image/') || url.startsWith('http')) return url;
     // Assume it's base64 if it's not a URL or data URL
     return `data:image/jpeg;base64,${url}`;
