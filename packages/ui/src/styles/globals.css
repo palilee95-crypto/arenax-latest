@@ -101,7 +101,7 @@ button {
 .app-content {
     flex: 1;
     padding: var(--space-lg);
-    padding-top: calc(90px + var(--space-lg));
+    padding-top: calc(70px + env(safe-area-inset-top) + var(--space-lg));
     /* Increased from 70px to account for extended TopBar */
     background: var(--background);
     width: 100%;
@@ -138,7 +138,7 @@ button {
 @media (max-width: 768px) {
     .app-content {
         padding: 0.5rem;
-        padding-top: calc(90px + env(safe-area-inset-top) + 0.5rem);
+        padding-top: calc(70px + env(safe-area-inset-top) + env(safe-area-inset-top) + 0.5rem);
         /* Increased from 70px */
     }
 }
@@ -451,11 +451,15 @@ button {
     .auth-textarea {
         font-size: 16px !important;
     }
-} 
- / *   H i d e   r e d u n d a n t   s e c t i o n s   o n   m o b i l e   * /  
- @ m e d i a   ( m a x - w i d t h :   7 6 8 p x )   {  
-         . h i d e - o n - m o b i l e   {  
-                 d i s p l a y :   n o n e   ! i m p o r t a n t ;  
-         }  
- }  
- 
+}
+
+   / *   H i d e   r e d u n d a n t   s e c t i o n s   o n   m o b i l e   * /     @ m e d i a   ( m a x - w i d t h :   7 6 8 p x )    {
+                 . h i d e - o n - m o b i l e    {
+                             d i s p l a y :    n o n e    ! i m p o r t a n t ;
+                     
+    }
+
+         
+}
+
+     
