@@ -331,8 +331,9 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--space-xs) var(--space-lg);
-    padding-top: max(var(--space-xs), env(safe-area-inset-top));
-    background: transparent;
+    padding-top: calc(env(safe-area-inset-top) + var(--space-xs));
+    background: #000000;
+    border-bottom: 1px solid var(--glass-border);
     position: fixed;
     top: 0;
     right: 0;
@@ -340,20 +341,6 @@
     z-index: 2000;
     gap: var(--space-md);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.arenax-topbar::before {
-    content: "";
-    position: absolute;
-    top: -100px;
-    /* Extend background upward to cover status bar */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000000;
-    /* Force solid black for mobile */
-    border-bottom: 1px solid var(--glass-border);
-    z-index: -1;
 }
 
 @media (min-width: 1025px) {
