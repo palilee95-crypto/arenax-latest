@@ -59,4 +59,12 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     }
 });
 
+
+export const getProfileImageUrl = (url: string | undefined, fallback: string) => {
+    if (!url) return fallback;
+    if (url.startsWith('data:image/') || url.startsWith('http')) return url;
+    // Assume it's base64 if it's not a URL or data URL
+    return `data:image/jpeg;base64,${url}`;
+};
+
 export * from './types';

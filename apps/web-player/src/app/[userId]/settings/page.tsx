@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, Button } from "@arenax/ui";
-import { supabase } from "@arenax/database";
+import { supabase, getProfileImageUrl } from "@arenax/database";
 import { useParams, useRouter } from "next/navigation";
 
 const MALAYSIA_DATA: Record<string, string[]> = {
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                                 <label>Avatar</label>
                                 <div className="image-preview-wrapper">
                                     <img
-                                        src={profile.avatar_url || "https://ui-avatars.com/api/?name=" + profile.first_name}
+                                        src={getProfileImageUrl(profile.avatar_url, "https://ui-avatars.com/api/?name=" + profile.first_name)}
                                         alt="Avatar"
                                         className="avatar-preview"
                                         onError={(e) => {
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                                 <label>Hero Background</label>
                                 <div className="image-preview-wrapper hero">
                                     <img
-                                        src={profile.hero_url || ""}
+                                        src={getProfileImageUrl(profile.hero_url, "")}
                                         alt="Hero"
                                         className="hero-preview"
                                         onError={(e) => {

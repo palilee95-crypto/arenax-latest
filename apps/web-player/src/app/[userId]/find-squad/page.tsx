@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Card, Button } from "@arenax/ui";
-import { supabase } from "@arenax/database";
+import { supabase, getProfileImageUrl } from "@arenax/database";
 
 interface PlayerProfile {
     id: string;
@@ -252,13 +252,6 @@ export default function FindSquadPage() {
 
     const [selectedPlayer, setSelectedPlayer] = useState<PlayerProfile | null>(null);
 
-    const getImageSrc = (url: string | undefined, fallback: string) => {
-        if (!url) return fallback;
-        if (url.startsWith('data:image/') || url.startsWith('http')) return url;
-        // Assume it's base64 if it's not a URL or data URL
-        return `data:image/jpeg;base64,${url}`;
-    };
-
     const filteredPlayers = players.filter(p =>
         `${p.first_name} ${p.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.district?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -284,7 +277,7 @@ export default function FindSquadPage() {
 
                     <div className="modal-hero-bg">
                         <img
-                            src={getImageSrc(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
+                            src={getProfileImageUrl(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
                             alt="Background"
                             className="bg-image"
                         />
@@ -295,7 +288,7 @@ export default function FindSquadPage() {
                         <div className="player-avatar-box">
                             <div className="avatar-container">
                                 <img
-                                    src={getImageSrc(player.avatar_url, "https://ui-avatars.com/api/?name=" + player.first_name)}
+                                    src={getProfileImageUrl(player.avatar_url, "https://ui-avatars.com/api/?name=" + player.first_name)}
                                     alt={player.first_name}
                                 />
                             </div>
@@ -398,7 +391,7 @@ export default function FindSquadPage() {
                                 >
                                     <div className="card-background">
                                         <img
-                                            src={getImageSrc(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
+                                            src={getProfileImageUrl(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
                                             alt="Background"
                                         />
                                         <div className="card-overlay"></div>
@@ -422,7 +415,7 @@ export default function FindSquadPage() {
 
                                             <div className="player-avatar-small">
                                                 <img
-                                                    src={getImageSrc(player.avatar_url, `https://ui-avatars.com/api/?name=${player.first_name}+${player.last_name}&background=random`)}
+                                                    src={getProfileImageUrl(player.avatar_url, `https://ui-avatars.com/api/?name=${player.first_name}+${player.last_name}&background=random`)}
                                                     alt={player.first_name}
                                                 />
                                             </div>

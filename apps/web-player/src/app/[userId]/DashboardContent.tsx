@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, Button } from "@arenax/ui";
-import { supabase } from "@arenax/database";
+import { supabase, getProfileImageUrl } from "@arenax/database";
 
 interface DashboardContentProps {
   userId: string;
@@ -189,11 +189,7 @@ export default function DashboardContent({ userId, initialProfile, initialWallet
             // Handle both data URL format (data:image/...) and raw base64
             profile?.hero_url ? (
               <img
-                src={
-                  profile.hero_url.startsWith('data:image/')
-                    ? profile.hero_url
-                    : `data:image/jpeg;base64,${profile.hero_url}`
-                }
+                src={getProfileImageUrl(profile.hero_url, "")}
                 alt="Football Player"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
