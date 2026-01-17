@@ -15,8 +15,20 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Arenax | Player Dashboard",
-  description: "Player dashboard for Arenax MVP",
+  title: "Arena X",
+  description: "The ultimate sports community platform",
+  manifest: "/manifest.json",
+  themeColor: "#00d26a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Arena X",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
