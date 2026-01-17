@@ -7,6 +7,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = {
   output: 'standalone',
   compress: true,
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
