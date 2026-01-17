@@ -345,7 +345,8 @@
 .arenax-topbar::before {
     content: "";
     position: absolute;
-    top: 0;
+    top: -100px;
+    /* Extend background upward to cover status bar */
     left: 0;
     right: 0;
     bottom: 0;
