@@ -1,6 +1,7 @@
 {
     "name": "ARENAX",
     "short_name": "ARENAX",
+    "version": "0.1.14",
     "description": "The ultimate sports community platform",
     "start_url": "/",
     "display": "standalone",
