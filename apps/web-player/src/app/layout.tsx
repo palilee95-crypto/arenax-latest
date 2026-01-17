@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Arena X",
   },
+  icons: {
+    apple: "/icon.png",
+  },
   viewport: {
     width: "device-width",
     initialScale: 1,
