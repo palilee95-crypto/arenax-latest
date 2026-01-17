@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { CreateMatchProvider } from "../../contexts/CreateMatchContext";
 import { unstable_noStore as noStore } from 'next/cache';
 import { NotificationHandler } from "../../components/NotificationHandler";
+import { cookies } from "next/headers";
 
 export const dynamic = 'force-dynamic';
 
@@ -36,19 +37,19 @@ export default async function UserLayout({
             redirect(`${authUrl}/onboarding`);
         }
 
-        // Session validation: Ensure URL userId matches authenticated user
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        // Session validation: Ensure URL userId matches authenticated user via cookie
+        const cookieStore = await cookies();
+        const authenticatedUserId = cookieStore.get("arenax_player_id")?.value;
 
-        if (authError || !user) {
+        if (!authenticatedUserId) {
+            console.log("[WEB-PLAYER] No authenticated userId found in cookies, redirecting to auth");
             redirect(`${process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'}`);
         }
 
-        if (user && user.id !== userId) {
-
-            redirect(`/${user.id}`);
+        if (authenticatedUserId !== userId) {
+            console.log("[WEB-PLAYER] Cookie mismatch, redirecting to own dashboard:", authenticatedUserId);
+            redirect(`/${authenticatedUserId}`);
         }
-
-
 
         // Redirection guard
         if (profile.role !== 'player') {
@@ -56,7 +57,8 @@ export default async function UserLayout({
                 'venue-owner': process.env.NEXT_PUBLIC_VENUE_URL || 'http://localhost:3002',
                 'admin': process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3003'
             };
-            redirect(`${roleRedirects[profile.role]}/${user.id}` || (process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000'));
+            const dashboardUrl = roleRedirects[profile.role] || (process.env.NEXT_PUBLIC_AUTH_URL || 'http://localhost:3000');
+            redirect(`${dashboardUrl}/${authenticatedUserId}`);
         }
 
         const userName = `${profile.first_name} ${profile.last_name}`;
