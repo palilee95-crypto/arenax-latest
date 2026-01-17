@@ -101,7 +101,8 @@ button {
 .app-content {
     flex: 1;
     padding: var(--space-lg);
-    padding-top: calc(70px + var(--space-lg));
+    padding-top: calc(90px + var(--space-lg));
+    /* Increased from 70px to account for extended TopBar */
     background: var(--background);
     width: 100%;
     max-width: 100vw;
@@ -137,7 +138,8 @@ button {
 @media (max-width: 768px) {
     .app-content {
         padding: 0.5rem;
-        padding-top: calc(70px + env(safe-area-inset-top) + 0.5rem);
+        padding-top: calc(90px + env(safe-area-inset-top) + 0.5rem);
+        /* Increased from 70px */
     }
 }
 
