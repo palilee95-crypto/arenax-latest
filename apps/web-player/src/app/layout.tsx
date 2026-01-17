@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   title: "Arena X",
   description: "The ultimate sports community platform",
   manifest: "/manifest.json",
-  themeColor: "#00d26a",
+  themeColor: "#000000",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Arena X",
   },
   icons: {
