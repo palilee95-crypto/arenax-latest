@@ -10,13 +10,29 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// Check if required config is present
+const isConfigValid = !!firebaseConfig.projectId && !!firebaseConfig.apiKey;
+
+// Initialize Firebase only if config is valid
+let app: any;
+try {
+    if (isConfigValid) {
+        app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    } else {
+        console.warn("[firebase-client] Firebase config is missing required fields (projectId or apiKey). Client-side Firebase services (like Messaging) will be disabled.");
+    }
+} catch (error) {
+    console.error("[firebase-client] Failed to initialize Firebase:", error);
+}
 
 let messaging: Messaging | undefined;
 
-if (typeof window !== "undefined") {
-    messaging = getMessaging(app);
+if (typeof window !== "undefined" && app) {
+    try {
+        messaging = getMessaging(app);
+    } catch (error) {
+        console.error("[firebase-client] Failed to initialize Messaging:", error);
+    }
 }
 
 export { app, messaging };
