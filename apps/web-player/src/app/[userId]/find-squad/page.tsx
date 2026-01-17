@@ -252,6 +252,13 @@ export default function FindSquadPage() {
 
     const [selectedPlayer, setSelectedPlayer] = useState<PlayerProfile | null>(null);
 
+    const getImageSrc = (url: string | undefined, fallback: string) => {
+        if (!url) return fallback;
+        if (url.startsWith('data:image/') || url.startsWith('http')) return url;
+        // Assume it's base64 if it's not a URL or data URL
+        return `data:image/jpeg;base64,${url}`;
+    };
+
     const filteredPlayers = players.filter(p =>
         `${p.first_name} ${p.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.district?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -276,14 +283,21 @@ export default function FindSquadPage() {
                     </button>
 
                     <div className="modal-hero-bg">
-                        <img src={player.hero_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000"} alt="Background" className="bg-image" />
+                        <img
+                            src={getImageSrc(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
+                            alt="Background"
+                            className="bg-image"
+                        />
                         <div className="bg-overlay"></div>
                     </div>
 
                     <div className="modal-body-content">
                         <div className="player-avatar-box">
                             <div className="avatar-container">
-                                <img src={player.avatar_url || "https://ui-avatars.com/api/?name=" + player.first_name} alt={player.first_name} />
+                                <img
+                                    src={getImageSrc(player.avatar_url, "https://ui-avatars.com/api/?name=" + player.first_name)}
+                                    alt={player.first_name}
+                                />
                             </div>
                             <div className="club-logo-badge">
                                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png" alt="Club" />
@@ -383,7 +397,10 @@ export default function FindSquadPage() {
                                     className="player-card-custom"
                                 >
                                     <div className="card-background">
-                                        <img src={player.hero_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000"} alt="Background" />
+                                        <img
+                                            src={getImageSrc(player.hero_url, "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1000")}
+                                            alt="Background"
+                                        />
                                         <div className="card-overlay"></div>
                                     </div>
                                     <div className="player-card-content">
@@ -404,13 +421,10 @@ export default function FindSquadPage() {
                                             </div>
 
                                             <div className="player-avatar-small">
-                                                {player.avatar_url ? (
-                                                    <img src={player.avatar_url} alt={player.first_name} />
-                                                ) : (
-                                                    <div className="avatar-placeholder-small">
-                                                        {player.first_name[0]}{player.last_name[0]}
-                                                    </div>
-                                                )}
+                                                <img
+                                                    src={getImageSrc(player.avatar_url, `https://ui-avatars.com/api/?name=${player.first_name}+${player.last_name}&background=random`)}
+                                                    alt={player.first_name}
+                                                />
                                             </div>
 
                                             <Button
