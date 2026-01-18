@@ -15,6 +15,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Arenax | Superadmin Dashboard",
   description: "Superadmin dashboard for Arenax MVP",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ARENAX Admin",
+  },
+  icons: {
+    apple: "/arenax-logo.png",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 

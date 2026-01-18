@@ -15,4 +15,14 @@ const nextConfig: NextConfig = {
   }
 };
 
-export default withBundleAnalyzer(nextConfig);
+// Force Vercel Build: 2026-01-18 13:06 - PWA Implementation
+const withPWA = require("@ducanh2912/next-pwa").default({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+});
+
+export default withBundleAnalyzer(withPWA(nextConfig));

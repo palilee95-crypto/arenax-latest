@@ -16,6 +16,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Arenax | Venue Owner Dashboard",
   description: "Venue owner dashboard for Arenax MVP",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ARENAX Venue",
+  },
+  icons: {
+    apple: "/arenax-logo.png",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 

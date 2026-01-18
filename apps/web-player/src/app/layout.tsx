@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Arena X",
   },
   icons: {
-    apple: "/arenax-centered.png",
+    apple: "/arenax-logo.png",
   },
   viewport: {
     width: "device-width",
