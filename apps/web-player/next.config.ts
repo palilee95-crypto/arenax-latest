@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
 };
 
 
-// Force Vercel Build: 2026-01-18 02:20 - PWA Cache Bust
+// Force Vercel Build: 2026-01-18 13:16 - PWA Universal Deployment
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
